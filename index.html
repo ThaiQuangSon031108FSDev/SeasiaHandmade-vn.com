@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seasia Handmade – Vòng tay may mắn</title>
+  <style>
+    :root {
+      --cream: #FFFDD0;
+      --navy: #0B2340;
+      --sea-blue: #005f73;
+      --accent: #F4A261;
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: Arial, sans-serif;
+    }
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--cream) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M0 50 C 25 0, 75 100, 100 50" stroke="%23005f73" fill="none" stroke-width="2" opacity="0.1"/><polygon points="80,10 85,25 100,25 88,35 92,50 80,40 68,50 72,35 60,25 75,25" fill="%23F4A261" opacity="0.1"/></svg>') repeat;
+      color: var(--navy);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      position: relative;
+    }
+  
+    /* Navbar */
+    nav {
+      position: relative;
+      background: var(--navy);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      border-bottom: 4px solid var(--sea-blue);
+      box-shadow: inset 0 6px 0 -4px var(--sea-blue);
+    }
+    nav::before, nav::after {
+      content: '';
+      position: absolute;
+      width: 32px; height: 32px;
+      top: 8px;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+    nav::before {
+      left: 8px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M32 2 L39 24 H62 L43 38 L50 60 L32 46 L14 60 L21 38 L2 24 H25 Z" fill="%23F4A261" opacity="0.3"/></svg>');
+    }
+    nav::after {
+      right: 8px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M32 2 L39 24 H62 L43 38 L50 60 L32 46 L14 60 L21 38 L2 24 H25 Z" fill="%23F4A261" opacity="0.3"/></svg>');
+    }
+    .logo { display: flex; align-items: center; }
+    .logo img { height: 40px; margin-right: 12px; }
+    nav h1 { font-family: var(--font-serif); font-size: 24px; color: var(--accent); }
+    .nav-links a {
+      color: var(--cream);
+      text-decoration: none;
+      margin-left: 20px;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '★';
+      color: var(--accent);
+      font-size: 10px;
+      position: absolute;
+      top: -6px;
+      right: -6px;
+    }
+  
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px;
+      }
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+    }
+  
+    /* Carousel */
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      height: 40vh;
+      margin: 20px auto;
+    }
+    .carousel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+    .carousel img.active { display: block; }
+    .dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.7);
+      cursor: pointer;
+    }
+    .dot.active { background: var(--accent); }
+  
+    @media (max-width: 600px) {
+      .carousel { height: 25vh; }
+    }
+  
+    /* Buttons */
+    .btn {
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .login-btn { background: var(--sea-blue); color: var(--cream); }
+    .cart-btn {
+      background: var(--sea-blue);
+      color: var(--cream);
+      position: relative;
+      margin-left: 10px;
+    }
+    .cart-btn::before { content: '🐚'; margin-right: 6px; }
+  
+    /* Modal & Cart */
+    .modal {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 360px;
+      max-height: 80vh;
+      overflow-y: auto;
+      background: var(--cream);
+      color: var(--navy);
+      border: 2px solid var(--sea-blue);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 20px;
+      z-index: 100;
+    }
+    .modal.open { display: block; }
+    .modal h4 {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      color: var(--sea-blue);
+      margin-bottom: 12px;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 4px;
+    }
+    #cart-items .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .cart-thumb {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .cart-total {
+      font-weight: bold;
+      font-size: 16px;
+      text-align: right;
+      margin-top: 10px;
+    }
+    #order-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--sea-blue);
+      color: var(--cream);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+    #order-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    #order-form input,
+    #order-form textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+  
+    @media (max-width: 600px) {
+      .modal {
+        right: 50%;
+        transform: translateX(50%);
+        width: calc(100% - 32px);
+      }
+      #order-form input,
+      #order-form textarea {
+        font-size: 16px;
+      }
+    }
+  
+    /* Products (responsive grid) */
+    .products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 20px 0;
+}
+
+    @media (max-width: 480px) {
+      .products {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+  
+    .product {
+      background: var(--cream);
+      border-radius: 8px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform .3s;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .product:hover { transform: translateY(-5px); }
+    .product img {
+  width: 100%;
+  aspect-ratio: 1 / 1;      /* ép thành hình vuông */
+  object-fit: cover;        /* cắt crop vừa khung */
+  border-radius: 4px;       /* tùy ý */
+  margin-bottom: 12px;
+}
+
+    .product h3 {
+      font-family: var(--font-serif);
+      color: var(--sea-blue);
+      margin: 8px 0;
+      font-size: 18px;
+    }
+    .product p {
+      font-weight: bold;
+      margin: 4px 0 12px;
+    }
+    .color-options {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .color-dot {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: border-color 0.3s;
+    }
+    .color-dot.selected {
+      border-color: var(--accent);
+    }
+    .product button {
+      background: var(--accent);
+      border: none;
+      padding: 10px 16px;
+      width: 100%;
+      color: var(--navy);
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .product button:hover {
+      background: #d68a4e;
+    }
+  
+    /* Footer */
+    footer {
+      background: var(--navy);
+      color: var(--cream);
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 30px;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+  
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <nav>
+    <div class="logo"><img src="logo.png" alt="Logo"><h1>Seasia Handmade</h1></div>
+    <div class="nav-links"><a href="#">Trang chủ</a><a href="#">Sản phẩm</a><a href="#">Liên hệ</a></div>
+    <div>
+      <button id="login-btn" class="btn login-btn">Đăng nhập</button>
+      <button id="cart-btn" class="btn cart-btn">Giỏ (<span id="cart-count">0</span>)</button>
+      <div id="login-modal" class="modal"><h4>Đăng nhập</h4><input id="user" placeholder="Tài khoản"><input id="pass" type="password" placeholder="Mật khẩu"><button id="login-submit">Đăng nhập</button></div>
+      <div id="cart-modal" class="modal">
+        <h4>Giỏ hàng</h4>
+        <div id="cart-items"></div>
+        <div class="cart-total">Tổng tiền: <span id="cart-total">0 đ</span></div>
+        <form id="order-form">
+          <button id="order-btn" type="button" disabled>Đặt hàng</button>
+          <input id="name" placeholder="Họ & Tên" required>
+          <input id="phone" type="tel" placeholder="Số điện thoại" pattern="\d{10,11}" required>
+          <textarea id="address" rows="2" placeholder="Địa chỉ" required></textarea>
+          <textarea id="note" rows="2" placeholder="Ghi chú"></textarea>
+        </form>
+      </div>
+    </div>
+  </nav>
+  <div class="carousel" id="banner" tabindex="0">
+    <img src="banner1.png" class="active" alt="Banner 1" loading="lazy">
+    <img src="banner2.png" alt="Banner 2">
+    <img src="banner3.png" alt="Banner 3">
+    <div class="dots" id="dots"></div>
+  </div>
+  <section class="products" id="product-list"></section>
+  <footer><p>© 2025 Seasia Handmade – Kết nối biển và may mắn ✨🐠</p></footer>
+  <script>
+    // Carousel setup
+    const banner = document.getElementById('banner'), slides = banner.querySelectorAll('img'), dotsContainer = document.getElementById('dots');
+    let currentSlide = 0, interval;
+    slides.forEach((_, i) => { const dot = document.createElement('div'); dot.className='dot'; dot.onclick = () => showSlide(i); dotsContainer.appendChild(dot); });
+    const dots = dotsContainer.querySelectorAll('.dot');
+    function showSlide(i) { slides[currentSlide].classList.remove('active'); dots[currentSlide].classList.remove('active'); currentSlide = i; slides[i].classList.add('active'); dots[i].classList.add('active'); }
+    function nextSlide() { showSlide((currentSlide+1)%slides.length); }
+    function startAuto() { interval = setInterval(nextSlide, 5000); }
+    function stopAuto() { clearInterval(interval); }
+    banner.addEventListener('mouseenter', stopAuto); banner.addEventListener('mouseleave', startAuto); showSlide(0); startAuto();
+    
+    // Login modal
+    const loginBtn = document.getElementById('login-btn'), loginModal = document.getElementById('login-modal'), loginSubmit = document.getElementById('login-submit');
+    let loggedIn = localStorage.getItem('loggedIn')==='true';
+    function updateLoginState() { if (loggedIn) { loginBtn.style.display='none'; document.getElementById('order-btn').disabled=false; } else { loginBtn.style.display='inline-block'; document.getElementById('order-btn').disabled=true; } }
+    loginBtn.onclick = () => loginModal.classList.toggle('open');
+    loginSubmit.onclick = () => { if (document.getElementById('user').value && document.getElementById('pass').value) { loggedIn=true; localStorage.setItem('loggedIn','true'); updateLoginState(); alert('Đăng nhập thành công!'); } else alert('Nhập đầy đủ!'); };
+    document.addEventListener('click', e => { if (!loginModal.contains(e.target) && e.target!==loginBtn) loginModal.classList.remove('open'); }); updateLoginState();
+
+    // Product & Cart logic
+    const products = [
+      {id:1,name:'Butterfly Sealine',price:50000,colors:{yellow:'img1.1.png',purple:'img1.2.png',blue:'img1.3.png',pink:'img1.4.png'}},
+      {id:2,name:'Super sunday',price:50000,colors:{turquoise:'2.1.png',pink:'2.2.png',blue:'2.3.png',yellow:'2.4.png'}},
+      {id:3,name:'Sunny sea',price:50000,colors:{blue:'3.1.png',pink:'3.2.png'}},
+      {id:4,name:'Seaside',price:50000,colors:{purple:'4.1.png',green:'4.2.png',blue:'4.3.png'}},
+      {id:5,name:'Rustic Star Mix',price:50000,colors:{white:'5.1.png',pink:'5.2.png'}},
+      {id:6,name:'Attractive fish',price:50000,colors:{orange:'6.1.png',yellow:'6.2.png', green: '6.3.png'}},
+    ];
+    let cart = JSON.parse(localStorage.getItem('cart'))||[];
+    function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)); }
+    function renderProducts() {
+      const list = document.getElementById('product-list'); list.innerHTML='';
+      products.forEach(p => { 
+        p.selectedColor = p.defaultColor||Object.keys(p.colors||{})[0];
+        const imgSrc = p.colors ? p.colors[p.selectedColor] : p.img;
+        const colorHTML = p.colors ? `<div class="color-options" id="colors-${p.id}">${Object.keys(p.colors).map(c=>`<span class="color-dot${c===p.selectedColor?' selected':''}" style="background:${c}" data-id="${p.id}" data-color="${c}"></span>`).join('')}</div>` : '';
+        list.innerHTML += `<div class="product"><img id="img-${p.id}" src="${imgSrc}"><h3>${p.name}</h3><p>${p.price.toLocaleString()} đ</p>${colorHTML}<button class="add-cart" data-id="${p.id}">Thêm vào giỏ</button></div>`;
+      });
+      document.querySelectorAll('.color-dot').forEach(d=> d.onclick=e=>{
+        const id=+e.target.dataset.id, color=e.target.dataset.color;
+        const prod = products.find(x=>x.id===id);
+        prod.selectedColor = color;
+        document.getElementById(`img-${id}`).src = prod.colors[color];
+        document.querySelectorAll(`#colors-${id} .color-dot`).forEach(x=>x.classList.remove('selected'));
+        e.target.classList.add('selected');
+      });
+      document.querySelectorAll('.add-cart').forEach(btn=> btn.onclick=e=> addToCart(+e.target.dataset.id));
+    }
+    function updateCart() {
+      const container = document.getElementById('cart-items'); container.innerHTML=''; let total=0;
+      cart.forEach(item=>{
+        total += item.price*item.qty;
+        const div=document.createElement('div'); div.className='cart-item';
+        div.innerHTML = `<img class="cart-thumb" src="${item.imgSrc}"><div><p><strong>${item.name}</strong> (${item.color}) x${item.qty}</p><p>${item.price.toLocaleString()} đ × ${item.qty} = ${(item.price*item.qty).toLocaleString()} đ</p></div><button class="remove" data-id="${item.id}">Xóa</button>`;
+        container.appendChild(div);
+      });
+      document.getElementById('cart-count').innerText = cart.reduce((s,i)=>s+i.qty,0);
+      document.getElementById('cart-total').innerText = total.toLocaleString() + ' đ';
+      document.getElementById('order-btn').disabled = cart.length===0;
+      document.querySelectorAll('.remove').forEach(b=> b.onclick=e=> removeFromCart(+e.target.dataset.id));
+      saveCart();
+    }
+    function addToCart(id) {
+      const prod = products.find(x=>x.id===id);
+      const color = prod.selectedColor;
+      const imgSrc = prod.colors ? prod.colors[color] : prod.img;
+      const exist = cart.find(x=>x.id===id && x.color===color);
+      if (exist) exist.qty++;
+      else cart.push({id, name:prod.name, price:prod.price, color, qty:1, imgSrc});
+      updateCart();
+    }
+    function removeFromCart(id) { cart = cart.filter(x=>x.id!==id); updateCart(); }
+    document.getElementById('cart-btn').onclick = ()=> document.getElementById('cart-modal').classList.toggle('open');
+    document.addEventListener('click', e=>{ const m=document.getElementById('cart-modal'); if(!m.contains(e.target)&&e.target.id!=='cart-btn') m.classList.remove('open'); });
+    renderProducts(); updateCart();
+
+    // --- XỬ LÝ GỬI ĐƠN HÀNG ---
+const orderBtn = document.getElementById('order-btn');
+orderBtn.addEventListener('click', () => {
+  // 1. Lấy dữ liệu form
+  const customer = {
+    name: document.getElementById('name').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    address: document.getElementById('address').value.trim(),
+    note: document.getElementById('note').value.trim()
+  };
+
+  // 2. Kiểm tra form hợp lệ
+  if (!customer.name || !customer.phone || !customer.address) {
+    return alert('Vui lòng điền đầy đủ thông tin trước khi đặt hàng.');
+  }
+
+  // 3. Chuẩn bị payload
+  const payload = {
+    customer,
+    items: cart.map(item => ({
+      productId: item.id,
+      name: item.name,
+      color: item.color,
+      qty: item.qty,
+      price: item.price
+    })),
+    total: cart.reduce((sum, i) => sum + i.price * i.qty, 0),
+    timestamp: new Date().toISOString()
+  };
+
+  // 4. Gửi lên backend
+  fetch('https://seasia-handmade-vn-com.onrender.com/api/orders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert(`Đặt hàng thành công! Mã đơn: ${data.orderId}`);
+      // 5. Reset giỏ hàng & form
+      cart = [];
+      saveCart();
+      updateCart();
+      document.getElementById('order-form').reset();
+      document.getElementById('cart-modal').classList.remove('open');
+    } else {
+      throw new Error(data.message || 'Lỗi server');
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại sau.');
+  });
+});
+
+  </script>
+</body>
+</html>
