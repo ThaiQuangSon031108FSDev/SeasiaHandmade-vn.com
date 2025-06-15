@@ -439,6 +439,112 @@
         color: var(--accent);
         text-decoration: none;
       }
+
+      /* post*/
+      /* Blog Posts Section */
+.blog-posts {
+    margin: 40px auto;
+    padding: 20px 0;
+    border-top: 2px solid var(--sea-blue);
+    border-bottom: 2px solid var(--sea-blue);
+}
+
+.blog-posts h2 {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    color: var(--sea-blue);
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+    position: relative;
+}
+
+.blog-posts h2::after {
+    content: '🌊'; /* Biểu tượng sóng nhỏ */
+    font-size: 20px;
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .posts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .posts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.blog-post {
+    background: var(--cream);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-post:hover {
+    transform: translateY(-5px);
+}
+
+.blog-post img {
+    width: 100%;
+    height: 180px; /* Chiều cao cố định cho ảnh thumbnail */
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+}
+
+.post-content {
+    padding: 16px;
+    flex-grow: 1; /* Cho phép nội dung co giãn */
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-post h3 {
+    font-family: var(--font-serif);
+    color: var(--sea-blue);
+    font-size: 20px;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.blog-post p {
+    font-size: 14px;
+    color: var(--navy);
+    line-height: 1.5;
+    margin-bottom: 12px;
+    flex-grow: 1; /* Giúp đoạn văn bản chiếm hết không gian */
+}
+
+.read-more-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--navy);
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    align-self: flex-start; /* Nút nằm ở đầu dòng */
+    transition: background-color 0.3s;
+}
+
+.read-more-btn:hover {
+    background: #d68a4e;
+}
     </style>
   
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -472,6 +578,12 @@
       <img src="banner3.png" alt="Banner 3">
       <div class="dots" id="dots"></div>
     </div>
+
+    <section class="blog-posts">
+      <h2>Tin tức Seasia Handmade</h2>
+      <div class="posts-grid" id="blog-posts-list">
+          </div>
+  </section>
 
     <div class="filter-container">
         <input type="search" id="search-bar" class="search-bar" placeholder="🔍 Tìm kiếm vòng tay...">
@@ -534,7 +646,7 @@
         {id:2, name:'Super Sunday', price:50000, colors:{turquoise:'2.1.png',pink:'2.2.png',blue:'2.3.png',yellow:'2.4.png'}, story: "Super Sunday là hiện thân của một buổi chiều Chủ Nhật dịu mát, bình yên bên bờ biển. Nơi ngôi sao biển nhỏ bé thì thầm những ước nguyện, và những hạt ngọc trai lấp lánh như bọt sóng trắng xóa. Chiếc vòng này là lời nhắc nhở bạn về những khoảnh khắc thư thái, để bạn có thể tận hưởng trọn vẹn sự bình yên và hạnh phúc giản dị của cuộc sống."},
         {id:3, name:'Ocean Dreamer', price:50000, colors:{blue:'3.1.png',pink:'3.2.png'}, story: "Ocean Dreamer là giấc mơ về đại dương bao la, nơi sắc xanh thẳm của biển sâu ôm ấp những bí mật, và ngôi sao biển dẫn lối cho những tâm hồn mộng mơ. Chiếc vòng này dành cho những ai luôn khao khát khám phá, luôn mơ mộng về những điều mới mẻ và không ngừng chinh phục những chân trời rộng lớn."},
         {id:4, name:'Breath Of The Sea', price:60000, colors:{green:'4.2.png',blue:'4.3.png'}, story: "Breath Of The Sea - Hơi thở của biển cả, mang theo sự trong lành và tươi mát. Chú cá nhỏ tự do bơi lội giữa những hạt ngọc xanh ngọc bích như nước biển trong vắt. Chiếc vòng này tượng trưng cho sự an nhiên, tự tại, và cảm giác được hòa mình vào thiên nhiên tươi đẹp, xua tan mọi muộn phiền."},
-        {id:5, name:'Double Star', price:50000, colors:{white:'5.1.png',pink:'5.2.png'}, story: "Double Star với hai ngôi sao biển màu hồng rực rỡ, tượng trưng cho những mối quan hệ bền chặt. Đó có thể là tình bạn thân thiết, tình yêu đôi lứa, hay sự gắn kết đặc biệt với một ai đó. Chiếc vòng là món quà ý nghĩa để bạn và những người thân yêu cùng nhau tỏa sáng, cùng nhau chia sẻ những khoảnh khắc đáng nhớ trong cuộc đời."},
+        {id:5, name:'Double Star', price:50000, colors:{white:'5.2.png',pink:'5.1.png'}, story: "Double Star với hai ngôi sao biển màu hồng rực rỡ, tượng trưng cho những mối quan hệ bền chặt. Đó có thể là tình bạn thân thiết, tình yêu đôi lứa, hay sự gắn kết đặc biệt với một ai đó. Chiếc vòng là món quà ý nghĩa để bạn và những người thân yêu cùng nhau tỏa sáng, cùng nhau chia sẻ những khoảnh khắc đáng nhớ trong cuộc đời."},
         {id:6, name:'Tide Bracelet', price:60000, colors:{orange:'6.1.png',yellow:'6.2.png', green: '6.3.png'}, story: "Tide Bracelet là hình ảnh của sự lên xuống của thủy triều, với sắc cam của hoàng hôn rực rỡ trên biển và những hạt đá lấp lánh như cát vàng. Chiếc vòng nhắc nhở chúng ta về sự thay đổi không ngừng của cuộc sống, và rằng sau mỗi con sóng lớn, bình minh sẽ lại đến, mang theo những khởi đầu mới đầy hy vọng."}
       ];
       let cart = JSON.parse(localStorage.getItem('cart'))||[];
@@ -744,15 +856,66 @@
         });
       });
 
+      //Post
+      // Thêm dữ liệu bài đăng vào đây
+const blogPosts = [
+    {
+        id: 1,
+        title: 'Hành trình ra đời của Seasia Handmade',
+        thumbnail: 'img/blog1.png', // Đổi đường dẫn ảnh thumbnail của bài đăng
+        excerpt: 'Khám phá câu chuyện và cảm hứng đằng sau những chiếc vòng tay handmade độc đáo của chúng tôi.',
+        link: 'blog-post-1.html' // Đường dẫn đến trang chi tiết bài đăng
+    },
+    {
+        id: 2,
+        title: 'Ý nghĩa các charm biển: Sao biển, Vỏ sò, Cá...',
+        thumbnail: 'img/blog2.png',
+        excerpt: 'Mỗi charm biển đều mang một ý nghĩa đặc biệt. Cùng Seasia khám phá chúng!',
+        link: 'blog-post-2.html'
+    },
+    {
+        id: 3,
+        title: 'Cách chọn vòng tay phù hợp với cá tính của bạn',
+        thumbnail: 'img/blog3.png',
+        excerpt: 'Vòng tay không chỉ là phụ kiện, mà còn là tuyên ngôn cá tính. Tìm hiểu cách chọn vòng ưng ý.',
+        link: 'blog-post-3.html'
+    }
+    // Thêm các bài đăng khác vào đây
+];
+
+function renderBlogPosts() {
+    const blogList = document.getElementById('blog-posts-list');
+    if (!blogList) return; // Đảm bảo phần tử tồn tại
+
+    blogList.innerHTML = '';
+    blogPosts.forEach(post => {
+        blogList.innerHTML += `
+            <div class="blog-post">
+                <img src="${post.thumbnail}" alt="${post.title}">
+                <div class="post-content">
+                    <h3>${post.title}</h3>
+                    <p>${post.excerpt}</p>
+                    <a href="${post.link}" class="read-more-btn">Đọc thêm</a>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// Gọi hàm này khi trang tải xong
+document.addEventListener('DOMContentLoaded', () => {
+    // Các hàm khởi tạo khác
+    displayProducts();
+    updateCart();
+    updateLoginState();
+    renderBlogPosts(); // Thêm dòng này để hiển thị bài đăng
+});
+
       // Initial render
       displayProducts(); 
       updateCart();
       updateLoginState(); // Call this again to set initial state of order button
-
+  
     </script>
   </body>
-<<<<<<< HEAD
   </html>
-=======
-  </html>
->>>>>>> 2690e5a3218b99f6cac30fd123b0b17ba9c08bff
